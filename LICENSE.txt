@@ -1,0 +1,36 @@
+Read-Only Access License
+
+1. License Grant:
+   Subject to the terms and conditions of this license, the copyright holder grants you a personal, non-transferable, non-exclusive, revocable right to view and read the software's source code for the sole purpose of understanding its logic, algorithms, and structure and also use it for the sole purpose of testing its functionality.
+
+2. Restrictions:
+   a. You are expressly prohibited from using, copying, profiting from, modifying, distributing, sublicensing, creating derivative works, or engaging in any other activity that would infringe upon the copyright holder's rights, except as expressly allowed under this license.
+
+   b. No right is granted to execute, compile, or otherwise run the software, whether for personal, commercial, or any other purposes with the exception of testing its functionality.
+
+3. No Grant of Ownership:
+   This license does not transfer ownership or any intellectual property rights in the software. You acknowledge that all right, title, and interest in the software remain with the copyright holder.
+
+4. No Support or Updates:
+   The copyright holder is not obligated to provide any support, maintenance, updates, or bug fixes for the software.
+
+5. No Warranty:
+   THE SOFTWARE IS PROVIDED "AS IS," WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT.
+
+6. Termination:
+   This license is effective until terminated. The copyright holder may terminate this license at any time upon notice. Upon termination, you must immediately cease all use and destroy all copies of the software.
+
+7. Consequences of Infringement:
+   a. In the event of a breach of the terms of this license, the copyright holder reserves the right to pursue any and all legal remedies available, including but not limited to seeking injunctive relief, damages, and attorney's fees.
+
+8. Governing Law and Jurisdiction:
+   This license shall be governed by and construed in accordance with the laws of Spain. Any disputes arising under or in connection with this license shall be subject to the exclusive jurisdiction of the competent courts of Barcelona, Spain.
+
+9. Entire Agreement:
+   This license constitutes the entire agreement between you and the copyright holder and supersedes all prior or contemporaneous understandings, agreements, representations, and warranties.
+
+10. Contact Information:
+   For questions about this license, you can contact the copyright holder at gusrab@gmail.com
+
+Gustavo Rabino
+Carrer Villa 1, 1st Floor, Apartment Nº6, Sant Cugat del Valles, Barcelona, Catalunya, Spain
