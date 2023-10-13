@@ -1,16 +1,11 @@
 import websocket
 import json
 import threading
-from ta.trend import EMAIndicator
 from tensorflow.keras.models import load_model
 import joblib
 from binance.client import Client
 import telebot
-import warnings
 from AI_Func import *
-
-# Disable all warnings
-warnings.filterwarnings('ignore')
 
 # Set display options
 pd.set_option('display.max_rows', None)  # Show all rows
@@ -38,12 +33,13 @@ bot = telebot.TeleBot(T_API_KEY)
 ticker = crypto[0].replace("/", "")
 symbol = ticker.lower()
 idx = (time_steps + future_points * sequences) * validations
-window = future_points * conv_to_interval  # The equivalent in seconds of the future points
+resample_size = f'{str(resample_co)}s'
+window = future_points * resample_co  # The equivalent in seconds of the future points
 w0 = 28 * future_points
 w1 = int(w0/2)
 w2 = int(w1/2)
 w3 = int(w2/2)
-limit_len = (w0 + idx) * conv_to_interval
+limit_len = (w0 + idx) * resample_co
 max_data_age = limit_len  # Maximum age of data to keep in seconds
 since = round_up(limit_len/3600, 2) # Since must be expressed in hours if limit len is expressed in seconds  we divide by 3600.
 
@@ -595,12 +591,11 @@ def predict_return(df2, dataset_name, model=model_name, scaler=scalers_name):
                'srsi_data': srsi_data, 'cci_data': cci_data, 'psar_data': psar_data, 'vwap_data': vwap_data}
     array = [arr_dic[arr_list[i]] for i in range(len(arr_list))]
 
-
     # Concatenate the selected arrays along the third axis
     input_sequences = np.concatenate((open_data, high_data, low_data, close_data, volume_data, *array), axis=2)
 
     # Make predictions
-    predictions = best_model.predict(input_sequences, verbose=0)
+    predictions = best_model.predict(input_sequences, verbose=verbose)
     predictions = scalers['target_scaler'].inverse_transform(predictions.reshape(-1, 1))
 
     # Print the predictions
@@ -742,7 +737,7 @@ def save_to_csv():
         if abs(prediction) > best_thres:
             delay_t = (datetime.now() - save_start).total_seconds()
             print(f'Pre-execution delay: {delay_t}')
-            execute(prediction, best_thres, save_start) # This executes the trade!!!
+            execute(prediction, best_thres, save_start)  # This executes the trade!!!
 
     delay = (datetime.now() - save_start).total_seconds()
     print(f'Total delay: {delay}')
