@@ -1,20 +1,26 @@
 from datetime import datetime, timedelta
 import math
-import random
 import ccxt
 import pandas as pd
 import numpy as np
 import time
-from ta.volatility import AverageTrueRange, BollingerBands, DonchianChannel, KeltnerChannel, UlcerIndex
-from ta.momentum import RSIIndicator, StochRSIIndicator, TSIIndicator, UltimateOscillator, StochasticOscillator, \
-    KAMAIndicator, ROCIndicator, AwesomeOscillatorIndicator, WilliamsRIndicator, PercentagePriceOscillator, \
-    PercentageVolumeOscillator
-from ta.trend import MACD, ADXIndicator, AroonIndicator, CCIIndicator, DPOIndicator, IchimokuIndicator, \
-    KSTIndicator, MassIndex, STCIndicator, TRIXIndicator, VortexIndicator, PSARIndicator, EMAIndicator
-from ta.volume import AccDistIndexIndicator, ChaikinMoneyFlowIndicator, EaseOfMovementIndicator, ForceIndexIndicator, \
-    MFIIndicator, OnBalanceVolumeIndicator, VolumePriceTrendIndicator, NegativeVolumeIndexIndicator
+import tensorflow as tf
+from ta.momentum import RSIIndicator, StochRSIIndicator, StochasticOscillator
+from ta.trend import CCIIndicator, EMAIndicator
+from tensorflow.keras.layers import LSTM, Dense
+from tensorflow.keras.models import Sequential
+import warnings
 from AI_Config import *
+# Disable all warnings
+warnings.filterwarnings('ignore')
 
+hyper_dic = {'epochs_list': [5, 10, 30, 50, 60, 70, 90, 120, 240],
+        'batch_size_list': [1, 5, 10, 15, 25, 50],
+        'layers_list': [1, 2, 4, 6, 8, 10, 32, 64, 128, 256],
+        'dropout_rate_list': [0.1, 0.2, 0.3, 0.5],
+        'learning_rate_list': [0.001, 0.0001, 0.00001, 0.000001],
+        'activation_input_list': ['tanh', 'sigmoid'],
+        'activation_output_list': ['tanh', 'sigmoid']}
 
 def round_down(num, dec):
     num = math.floor(num * 10 ** dec) / 10 ** dec
@@ -76,6 +82,26 @@ def get_psar(df, iaf=0.02, maxaf=0.2):
                 if high.iloc[i - 2] > df.psar.iloc[i]:
                     df.psar.iloc[i] = high.iloc[i - 2]
     return df.psar
+
+def create_model(input_data, num_lstm_units, dropout_rate, learning_rate, activation_input, activation_output):
+    model = Sequential()
+    model.add(LSTM(num_lstm_units, input_shape=(time_steps, input_data.shape[2]), activation=activation_input,
+                   dropout=dropout_rate))
+    model.add(Dense(1, activation=activation_output))
+    optimizer = tf.keras.optimizers.Adam(learning_rate=learning_rate)
+    model.compile(optimizer=optimizer, loss='binary_crossentropy', metrics=['accuracy'])
+    return model
+
+def evaluate(model, input_test, target_test):
+    # Evaluate the model on the test set
+    loss, accuracy = model.evaluate(input_test, target_test, verbose=verbose)
+    predictions = model.predict(input_test)
+    predictions = np.where(predictions >= 0.5, 1, 0)  # Convert probabilities to binary predictions
+    predictions = predictions.flatten()
+    accuracy = np.mean(predictions == target_test)  # Calculate accuracy
+    print(f'Accuracy: {accuracy:.2f}')
+    print(f'Score: {loss}')
+    return accuracy, loss
 
 def fetch_data(exchange='binance', cryptos=['BTC/USDT'], sample_freq='1m', since_hours=48, page_limit=1000, max_retries = 3):
 
