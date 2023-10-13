@@ -8,12 +8,12 @@ The Neural Network will input a number of features (OHLCV and a combination of t
 
 2 - Tuner
 
-After adjusting the LSTM variables in AI_Config, this program will download a dataset from Binance exchange and tune the hyperparameters of the network based on the base OHLCV dataset and a fixed or random combination of indicators as features, created from the list called "arr_list" inside AI_Config.py.
-It will output a file (best_params.joblib) containing these parameters to be used by the modeler. The modeler will use this file and the combination of indicators defined in the variable "arr_list" inside "AI_Config". For this reason if we are not using all the indicators inside this list due to having found a different combination that uses fewer indicators then is it is necessary to change the list before executing the modeler.
+After adjusting the LSTM variables in AI_Config, this program will download a dataset from Binance exchange and tune the hyperparameters of the network based on the base OHLCV dataset and a fixed or random combination of indicators as features, defined in the list "arr_list" inside AI_Config.py.
+The program will output the results on the screen, showing the average accuracy obtained, hyperparameters and the tested combination. The hyperparameters with the best result should be manually re-introduced in the default hyperparameter section in the "AI_Config" file along with the combination of indicators defined in the variable "arr_list". 
 
 3 - Modeler
 
-The modeler will use the best_params file from the tuner and the desire combination of indicators in arr_lost in AI_config to train/test a RNN LSTM based on the modeler_mode. If modeler_mode = "solo" the modeler will download its own dataset and use it for modeling otherwise if modeler_mode = "parallel" mode the program will wait for the trader to download its dataset and use this dataset to model. After finding a better model evaluated by its accuracy in predicting the price movement, the program will save a model file and scaler file that will be used by the trader.
+The modeler will use the parameters defined in AI_Config to train/test a RNN LSTM based on the modeler_mode. If modeler_mode = "solo" the modeler will download its own dataset and use it for modeling otherwise if modeler_mode = "parallel" mode the program will wait for the trader to download its dataset and use this dataset to model. After finding a better model evaluated by its accuracy in predicting the price movement, the program will save a model file and scaler file that will be used by the trader.
 
 4 - Trader
 
