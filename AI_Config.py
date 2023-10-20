@@ -2,15 +2,17 @@ import logging
 import os
 from c_config import B_API_KEY, B_API_SECRETKEY, T_API_KEY, chat_id  # Fill-up the c_config file with your keys
 
+#--- Configuration parameters ---
+
 loc_folder = ''  # I/O folder can be set here (Ex:loc_folder = 'C:/Users/USER/PycharmProjects/ProjectA'//). An empty string will look for resources in the root folder.
 crypto = ['BTC/TUSD']  # Market pair chosen for trading
 target_name = "Return"  # name of the target column
 interval = '1s'  # Sample or Candle size of the imported dataset
-future_points = 10  # Once the dataset is resampled this value defines how far in the future are we trying to predict (Ex: If resample size = 10 seconds and future_points = 18, the program is predicting at 180 seconds into the future)
-resample_co = 30  # Resample size expressed as a number of intervals
-time_steps = 20 * future_points  # "future_points" will be used as a base to calculate the sequence length of the LSTM RNN
+future_points = 8  # Once the dataset is resampled this value defines how far in the future are we trying to predict (Ex: If resample size = 10 seconds and future_points = 18, the program is predicting at 180 seconds into the future)
+resample_co = 15  # Resample size expressed as a number of intervals
+time_steps = 75 * future_points  # "future_points" will be used as a base to calculate the sequence length of the LSTM RNN
 sequences = 30  # This value represents the number of sequences that are being used in order to train the LSTM.
-dense_units = 1  # Dense layer units, this should stay at 1.
+dense_units = 2  # Dense layer units, this should stay at 1.
 dataset_name = 'candles.csv'  # Name of the data set that will be shared and updated constantly by the modeler and trader tools
 hyper_loops = 100  # Number of random hyperparameter combinations to try for each combination of indicators that the tuner uses.
 comb_loops = 50  # Number of random indicator combinations to try for each combination of hyperparameters that the tuner uses.
@@ -35,7 +37,7 @@ hyper_mode = 3 --> Uses the default hyperparameter values on all random combinat
 hyper_mode = 1  # The Hyperparameter finder can try different hyperparameters on all the indicators at the same time or try different Hyperparamenter on all combinations of
 
 # Indicator list for the tuner, modeler, and trader:
-arr_list = ['so_data', 'pvo_data', 'ema_data', 'rsi_data', 'srsi_data', 'cci_data', 'psar_data', 'vwap_data']  # Once the best indicators have been found by the tuner and in order to use that combination in the modeler is necessary to update this list accordingly with that combination first.
+arr_list = ['so', 'pvo', 'ema', 'rsi', 'srsi', 'cci', 'psar', 'vwap']  # Once the best indicators have been found by the tuner and in order to use that combination in the modeler is necessary to update this list accordingly with that combination first.
 #arr_list = []
 # No indicatorsLayers: 10 Epochs: 90 Batch Size: 15 Dropout Rate: 0.2 Learning Rate: 1e-06 Input Act. Func: tanh Output Act. Func: tanh
 
@@ -45,7 +47,7 @@ dropout = 0.2
 learning_rate = 0.000001
 act_input = 'sigmoid'
 act_output = 'tanh'
-epochs = 60
+epochs = 50
 batch_size = 25
 
 # Logger Configuration
