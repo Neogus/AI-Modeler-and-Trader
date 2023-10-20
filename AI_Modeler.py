@@ -39,9 +39,9 @@ while True:
         while True:
             try:
                 print(f'Retrieving dataset: {dataset_name}')
-                dataset = pd.read_csv(f'{loc_folder}dataset_name', index_col=['datetime'], parse_dates=True).fillna(method='ffill')
+                dataset = pd.read_csv(f'{loc_folder}{dataset_name}', index_col=['datetime'], parse_dates=True).fillna(method='ffill')
             except:
-                print(f'Shared dataset could not be bound. Retrying in 60 seconds...')
+                print(f'Shared dataset could not be found. Retrying in 60 seconds...')
                 time.sleep(60)
                 continue
             break
