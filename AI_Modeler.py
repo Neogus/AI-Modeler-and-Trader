@@ -13,13 +13,13 @@ warnings.filterwarnings('ignore')
 '''
                                        ---------- RNN LSTM Modeler -----------
 
-This tool will train an LSTM RNN based on the hyperparameters and combinations defined by the tuner. 
-This modeler can be run in two different modes defined by the modeler_mode value in AI_Config. 
+This tool will train an LSTM RNN based on the hyperparameters and combination defined by the tuner. 
+This modeler can be runned in two different modes defined by the modeler_mode value in AI_Config. 
 If the modeler runs in parallel with the trader the modeler will share the dataset file with the trader program to 
-ensure that is using the latest information to model so it will look for this dataset first and wait until it has enough 
+assure that is using the latest information to model so it will look for this dataset first and wait until it has enough 
 length to be able to model. Once it finds a better predictive model for the price movement it will update the model. The value model_reset defines a number of 
-seconds after which the accuracy score will be reset so that a more updated model can be trained.
-If the modeler runs 'solo' instead of waiting it will download its own dataset and train the model based on that.
+seconds after which the accuracy score will be reset so that a more updated model can be train.
+If the modeler runs 'solo' instead of waiting it will download it's own dataset and train the model based on that.
 '''
 
 dataset_name_2 = 'm_' + dataset_name
@@ -38,7 +38,7 @@ while True:
     if modeler_mode == 'parallel':
         while True:
             try:
-                print(retrieving dataset: {dataset_name}')
+                print(f'Retrieving dataset: {dataset_name}')
                 dataset = pd.read_csv(f'{loc_folder}dataset_name', index_col=['datetime'], parse_dates=True).fillna(method='ffill')
             except:
                 print(f'Shared dataset could not be bound. Retrying in 60 seconds...')
@@ -138,8 +138,8 @@ while True:
         # Normalize the output data
         target_data = target_scaler.fit_transform(target_data.reshape(-1, 1)).reshape(target_data.shape)
         # List of arrays to choose from
-        arr_dic = {'so_data': so_data, 'pvo_data': pvo_data, 'ema_data': ema_data, 'rsi_data': rsi_data,
-                   'srsi_data': srsi_data, 'cci_data': cci_data, 'psar_data': psar_data, 'vwap_data': vwap_data}
+        arr_dic = {'so': so_data, 'pvo': pvo_data, 'ema': ema_data, 'rsi': rsi_data,
+                   'srsi': srsi_data, 'cci': cci_data, 'psar': psar_data, 'vwap': vwap_data}
         array = [arr_dic[arr_list[i]] for i in range(len(arr_list))]
         acc_mean = 0
         loss_mean = 0
