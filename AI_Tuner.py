@@ -108,8 +108,8 @@ if len(dataset) > limi:
     volume_data = volume_scaler.fit_transform(volume_data.reshape(-1, 1)).reshape(-1, time_steps, 1)
 
     # List of arrays to choose from
-    arr_dic = {'so_data': so_data, 'pvo_data': pvo_data, 'ema_data': ema_data, 'rsi_data': rsi_data,
-               'srsi_data': srsi_data, 'cci_data': cci_data, 'psar_data': psar_data, 'vwap_data': vwap_data}
+    arr_dic = {'so': so_data, 'pvo': pvo_data, 'ema': ema_data, 'rsi': rsi_data,
+               'srsi': srsi_data, 'cci': cci_data, 'psar': psar_data, 'vwap': vwap_data}
     array = [arr_dic[arr_list[i]] for i in range(len(arr_list))]
     combinations = []
 
