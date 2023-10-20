@@ -587,8 +587,8 @@ def predict_return(df2, dataset_name, model=model_name, scaler=scalers_name):
     volume_data = scalers['volume_scaler'].fit_transform(volume_data.reshape(-1, 1)).reshape(-1, time_steps, 1)
 
     # Select indicator based on the selected indexes
-    arr_dic = {'so_data': so_data, 'pvo_data': pvo_data, 'ema_data': ema_data, 'rsi_data': rsi_data,
-               'srsi_data': srsi_data, 'cci_data': cci_data, 'psar_data': psar_data, 'vwap_data': vwap_data}
+    arr_dic = {'so': so_data, 'pvo': pvo_data, 'ema': ema_data, 'rsi': rsi_data,
+               'srsi': srsi_data, 'cci': cci_data, 'psar': psar_data, 'vwap': vwap_data}
     array = [arr_dic[arr_list[i]] for i in range(len(arr_list))]
 
     # Concatenate the selected arrays along the third axis
