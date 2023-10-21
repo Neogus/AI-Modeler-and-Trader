@@ -16,11 +16,11 @@ pd.set_option('display.width', None)  # Disable column width truncation
 '''
                                        ---------- AI Trader -----------
 
-This tool will wait for a model file coming from the AI_Modeler tool in order to apply on a datset that is constantly 
+This tool will wait for a model file coming from the AI_Modeler tool in order to apply to a dataset that is constantly 
 updated by the stream of info coming from the websocket connection hence creating predictions on the future return and
 trading accordingly.
 In order to work model and scalers files should be available in the "loc_folder". 
-The program will look for the dataset and trim it based on the defined threshold time to used the recent information. 
+The program will look for the dataset and trim it based on the defined threshold time to use the recent information. 
 
 '''
 
@@ -42,6 +42,7 @@ w3 = int(w2/2)
 limit_len = (w0 + idx) * resample_co
 max_data_age = limit_len  # Maximum age of data to keep in seconds
 since = round_up(limit_len/3600, 2) # Since must be expressed in hours if limit len is expressed in seconds  we divide by 3600.
+first_trade = 0
 
 # Import base candles
 Import_AI(name=dataset_name, cryptos=crypto, sample_freq=interval, since=since, future_points=future_points, resample_size=resample_size)
@@ -398,7 +399,7 @@ def place_order(ticker, asset, asset_m, side, e_type, price_point):
 def execute(prediction, best_thres, save_start):
     global dfl
     global dfs
-
+    global first_trade
     current_datetime = datetime.now().strftime("%d-%m at %H:%M:%S")
     cdf = 0
     coin = crypto[0][:-5]
@@ -441,6 +442,7 @@ def execute(prediction, best_thres, save_start):
         if exit_code == 2:
             dfs['Status'][0] == -1
             return print(f'Exit Code: {exit_code}. Error de conexión')
+        first_trade += 1
 
     elif dfs['Status'][0] == -1:
         message = f'Se procede a la venta. El precio actual es de {current_price} USD.'
@@ -451,7 +453,7 @@ def execute(prediction, best_thres, save_start):
 
         if exit_code == 2:
             return print(f'Exit Code: {exit_code}. Error de conexión')
-    elif dfs['Status'][0] == 0 and cdf == 1:
+    elif dfs['Status'][0] == 0 and cdf == 1 and first_trade != 0:
 
         # Short/Repay
         logger.info(f'{coin} Short Alarm Triggered')
