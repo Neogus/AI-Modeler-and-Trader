@@ -1,14 +1,22 @@
 import os
 import logging
-from src.AI_Modeler import main_modeler
-import src.AI_Config
+from src.AI_Tuner import tuner
+from src.AI_Modeler import modeler
+from src.AI_Trader import trader
 
 if __name__=="__main__":
-    
-    file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'Logger.log')
-    logging.basicConfig(level=logging.INFO, format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
-                        datefmt='%m-%d %H:%M', filename=file, filemode='a')
-    console = logging.StreamHandler()
-    logging.getLogger('').addHandler(console)
-    logger = logging.getLogger('Log')
-    main_modeler()
+
+    while True:
+
+        selection = input('Please type in the module you would like to run:\n')
+        if selection == 'tuner':
+            tuner()
+            exit()
+        elif selection == 'modeler':
+            modeler()
+            exit()
+        elif selection == 'trader':
+            trader()
+            exit()
+        else:
+            print(f'"{selection}" is not a valid input please type one of the valid modules (tuner, modeler or trader)')
