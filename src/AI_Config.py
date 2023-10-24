@@ -8,11 +8,11 @@ loc_folder = ''  # I/O folder can be set here (Ex:loc_folder = 'C:/Users/USER/Py
 crypto = ['BTC/TUSD']  # Market pair chosen for trading
 target_name = "Return"  # name of the target column
 interval = '1s'  # Sample or Candle size of the imported dataset
-future_points = 8  # Once the dataset is resampled this value defines how far in the future are we trying to predict (Ex: If resample size = 10 seconds and future_points = 18, the program is predicting at 180 seconds into the future)
+future_points = 20  # Once the dataset is resampled this value defines how far in the future are we trying to predict (Ex: If resample size = 10 seconds and future_points = 18, the program is predicting at 180 seconds into the future)
 resample_co = 15  # Resample size expressed as a number of intervals
-time_steps = 75 * future_points  # "future_points" will be used as a base to calculate the sequence length of the LSTM RNN
-sequences = 30  # This value represents the number of sequences that are being used in order to train the LSTM.
-dense_units = 2  # Dense layer units, this should stay at 1.
+time_steps = 30 * future_points  # "future_points" will be used as a base to calculate the sequence length of the LSTM RNN
+sequences = 20  # This value represents the number of sequences that are being used in order to train the LSTM.
+dense_units = 1  # Dense layer units, this should stay at 1.
 dataset_name = 'candles.csv'  # Name of the data set that will be shared and updated constantly by the modeler and trader tools
 hyper_loops = 100  # Number of random hyperparameter combinations to try for each combination of indicators that the tuner uses.
 comb_loops = 50  # Number of random indicator combinations to try for each combination of hyperparameters that the tuner uses.
@@ -38,21 +38,28 @@ hyper_mode = 1  # The Hyperparameter finder can try different hyperparameters on
 
 # Indicator list for the tuner, modeler, and trader:
 arr_list = ['so', 'pvo', 'ema', 'rsi', 'srsi', 'cci', 'psar', 'vwap']  # Once the best indicators have been found by the tuner and in order to use that combination in the modeler is necessary to update this list accordingly with that combination first.
-#arr_list = []
+#arr_list = ['srsi', 'cci']
 # No indicatorsLayers: 10 Epochs: 90 Batch Size: 15 Dropout Rate: 0.2 Learning Rate: 1e-06 Input Act. Func: tanh Output Act. Func: tanh
 
 # Default hyperparameters for the Tuner and Modeler (If hyper_mode = 2 the tuner will use these):
-layers = 128
+layers = 64
 dropout = 0.2
 learning_rate = 0.000001
-act_input = 'sigmoid'
+act_input = 'tanh'
 act_output = 'tanh'
-epochs = 50
-batch_size = 25
+epochs = 120
+batch_size = 10
 
-# Logger Configuration
+# Logger config
 
+file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'Logger.log')
+logging.basicConfig(level=logging.INFO, format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
+                    datefmt='%m-%d %H:%M', filename=file, filemode='a')
+console = logging.StreamHandler()
+logging.getLogger('').addHandler(console)
+logger = logging.getLogger('Log')
 
 # Files config
 model_name = f'model-{desc}.h5'
 scalers_name = f'scalers-{desc}.pkl'
+
