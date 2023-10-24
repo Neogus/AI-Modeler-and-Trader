@@ -35,4 +35,4 @@ The trader will establish a WebSocket connection with the Binance exchange and u
 By using the Program, you acknowledge that you have read and understood this disclaimer and the associated license agreement. You agree to use the Program in accordance with the terms and conditions specified in the license agreement.
 
 Gustavo Rabino
-20th of October, 2023
+24th of October, 2023
