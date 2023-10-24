@@ -22,20 +22,19 @@ seconds after which the accuracy score will be reset so that a more updated mode
 If the modeler runs 'solo' instead of waiting it will download it's own dataset and train the model based on that.
 '''
 
-dataset_name_2 = 'm_' + dataset_name
-resample_size = f'{str(resample_co)}s'
-idx = (time_steps + future_points * sequences) * validations
-w0 = 28 * future_points
-limi = w0 + idx
-limit_len = limi * resample_co
-since = round_up(limit_len/3600, 2)  # Since must be expressed in hours if limit len is expressed in seconds  we divide by 3600.
-best_score = 0
-best_combination = None
-last_reset = datetime.now()
-
-def main_modeler():
+def modeler(dataset_name):
+    dataset_name_2 = 'm_' + dataset_name
+    resample_size = f'{str(resample_co)}s'
+    idx = (time_steps + future_points * sequences) * validations
+    w0 = 28 * future_points
+    limi = w0 + idx
+    limit_len = limi * resample_co
+    since = round_up(limit_len / 3600,
+                     2)  # Since must be expressed in hours if limit len is expressed in seconds  we divide by 3600.
+    best_score = 0
+    best_combination = None
+    last_reset = datetime.now()
     while True:
-
         if modeler_mode == 'parallel':
             while True:
                 try:
@@ -98,7 +97,6 @@ def main_modeler():
             psar_scaler = StandardScaler()
             vwap_scaler = StandardScaler()
             target_scaler = StandardScaler()
-
             # Standardize and normalize the price data
             open_data = input_data[:, :, 0]
             open_data = (open_data - np.mean(open_data, axis=0)) / np.std(open_data, axis=0)
@@ -149,7 +147,6 @@ def main_modeler():
             print(f'Combination Indexes: {arr_list}')
             # Create and fit the LSTM model with the specified hyperparameters
             print(f'Layers: {layers} Epochs: {epochs} Batch Size: {batch_size} Dropout Rate: {dropout} Learning Rate: {learning_rate} Input Act. Func: {act_input} Output Act. Func: {act_output}')
-
             for x in range(validations):
                 ix = int(len(input_data) / validations) * x
                 fx = ix + int(len(input_data) / validations)
@@ -173,11 +170,9 @@ def main_modeler():
                 print(f'Accuracy: {accuracy:.2f}')
                 acc_mean += accuracy / validations
                 loss_mean += loss / validations
-
             # Check if the current combination is better than the previous best
             print(f'Avg. Accuracy: {acc_mean:.2f}')
             print(f'Avg. Loss: {loss_mean:.2f}')
-
             # Check if the current combination is better than the previous best
             if acc_mean > best_score:
                 best_score = acc_mean
@@ -206,14 +201,12 @@ def main_modeler():
                 print('Saving Model...')
                 save_model(best_model,  f'{loc_folder}{model_name}')  # Saves model to be used by the Trader
                 joblib.dump(scalers,  f'{loc_folder}{scalers_name}')  # Saves scalers to be used by the Trader
-
                 elapsed_time = (datetime.now() - last_reset).total_seconds()
                 # Check if it's time to reset the variable
                 if elapsed_time > model_reset and modeler_mode == 'parallel':
                     best_score = 0
                     last_reset = datetime.now()
                     print(f'Modeling duration: {datetime.now() - start_t}')
-
                 elif modeler_mode == 'solo':
                     print(f'Modeling duration: {datetime.now() - start_t}')
                     exit()
