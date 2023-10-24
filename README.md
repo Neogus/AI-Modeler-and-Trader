@@ -3,13 +3,14 @@ Tools for modeling and deploying recurrent long-short-term memory neural network
 
 1 - Introduction
 
-This repository contains a series of programs to train/test an LSTM neural network to predict price direction and use it to trade algorithmically. Inside the repository, there should be 6 files. "AI_Tuner.py", "AI_Modeler.py" and "AI_Trader.py" can be used to execute the correspondent tools while "AI_Config.py" contains the configuration of these tools. Lastly, AI_Func is a function library used by the scripts and c_config.py contains the API keys and Chat ID variable necessary to run the trader, send messages to a telegram chat, and place orders in the Binance exchange. 
-The Neural Network will input a number of features (OHLCV and a combination of technical indicators) to target the return.
+This repository contains a series of programs to train/test an LSTM neural network to predict price direction and use it to trade algorithmically. The folder "src"  contains the configuration files and the modules that will be called by the main. The main will ask us to select the model we would like to run (Tuner, Modeler, or Trader) while "AI_Config.py" contains the shared configuration of these tools. Lastly, AI_Func is a function library used by the scripts and c_config.py contains the API keys and Chat ID variable necessary to run the trader, send messages to a telegram chat, and place orders in the Binance exchange. 
+Before executing the main make sure to set up the "AI_Config" file and keep it open for further changes.
+The Neural Network will input a number of features (OHLCV and a combination of technical indicators) to target the return and try to forecast price movement.
 
 2 - Tuner
 
-After adjusting the LSTM variables in AI_Config, this program will download a dataset from Binance exchange and tune the hyperparameters of the network based on the base OHLCV dataset and a fixed or random combination of indicators as features, defined in the list "arr_list" inside AI_Config.py.
-The program will output the results on the screen, showing the average accuracy obtained, hyperparameters and the tested combination. The hyperparameters with the best result should be manually re-introduced in the default hyperparameter section in the "AI_Config" file along with the combination of indicators defined in the variable "arr_list". 
+After adjusting the LSTM variables in AI_Config, this module will download a dataset from Binance exchange and tune the hyperparameters of the network based on the base OHLCV dataset and a fixed or random combination of indicators as features, defined in the list "arr_list" inside AI_Config.py.
+The program will output the results on the screen, showing the average accuracy obtained, hyperparameters, and the tested combination. The hyperparameters with the best result should be manually re-introduced in the default hyperparameter section in the "AI_Config" file along with the combination of indicators defined in the variable "arr_list". 
 
 3 - Modeler
 
