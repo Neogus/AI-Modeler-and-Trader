@@ -75,41 +75,16 @@ def modeler(dataset_name):
             volume_column = ['volume']
             indicator_columns = ['so', 'pvo', 'ema', 'rsi', 'srsi', 'cci', 'psar', 'vwap']
             # Prepare the data
-            input_data = []
-            target_data = []
-            for i in range(0, len(dataset) - time_steps + 1, future_points):
-                input_data.append(dataset.iloc[i:i + time_steps, :feat_num].values)
-                target_data.append(dataset.iloc[i + time_steps - 1, dataset.columns.get_loc('Return')])
-            input_data = np.array(input_data)
-            target_data = np.array(target_data)
+            input_data, target_data = prepare_input_target_data(dataset, feat_num)
             # Create separate scalers for each category of features
-            open_scaler = StandardScaler()
-            high_scaler = StandardScaler()
-            low_scaler = StandardScaler()
-            close_scaler = StandardScaler()
-            volume_scaler = StandardScaler()
-            so_scaler = MinMaxScaler()
-            pvo_scaler = StandardScaler()
-            ema_scaler = StandardScaler()
-            rsi_scaler = MinMaxScaler()
-            srsi_scaler = MinMaxScaler()
-            cci_scaler = MinMaxScaler()
-            psar_scaler = StandardScaler()
-            vwap_scaler = StandardScaler()
-            target_scaler = StandardScaler()
+            open_scaler, high_scaler, low_scaler, close_scaler, volume_scaler, so_scaler, pvo_scaler, ema_scaler, rsi_scaler, srsi_scaler, cci_scaler, psar_scaler, vwap_scaler, target_scaler = create_separate_scalers()
             # Standardize and normalize the price data
-            open_data = input_data[:, :, 0]
-            open_data = (open_data - np.mean(open_data, axis=0)) / np.std(open_data, axis=0)
-            open_data = open_scaler.fit_transform(open_data.reshape(-1, 1)).reshape(-1, time_steps, 1)
-            high_data = input_data[:, :, 1]
-            high_data = (high_data - np.mean(high_data, axis=0)) / np.std(high_data, axis=0)
-            high_data = high_scaler.fit_transform(high_data.reshape(-1, 1)).reshape(-1, time_steps, 1)
-            low_data = input_data[:, :, 2]
-            low_data = (low_data - np.mean(low_data, axis=0)) / np.std(low_data, axis=0)
-            low_data = low_scaler.fit_transform(low_data.reshape(-1, 1)).reshape(-1, time_steps, 1)
-            close_data = input_data[:, :, 3]
-            close_data = (close_data - np.mean(close_data, axis=0)) / np.std(close_data, axis=0)
-            close_data = close_scaler.fit_transform(close_data.reshape(-1, 1)).reshape(-1, time_steps, 1)
+            
+            open_data = standardize_and_normalize(input_data, scaler=open_scaler, data_axis=0)
+            high_data = standardize_and_normalize(input_data, scaler=high_scaler, data_axis=1)
+
+            low_data = standardize_and_normalize(input_data, scaler=low_scaler, data_axis=2)
+            close_data = standardize_and_normalize(input_data=input_data, scaler=close_scaler, data_axis=3)
             # Standardize and normalize EMA and PSAR
             ema_data = input_data[:, :, len(price_columns) + 3]
             ema_data = (ema_data - np.mean(ema_data, axis=0)) / np.std(ema_data, axis=0)
@@ -215,3 +190,36 @@ def modeler(dataset_name):
             time.sleep(60)
             continue
         time.sleep(30)
+
+def standardize_and_normalize(input_data, scaler, data_axis):
+    extracted_data = input_data[:, :, data_axis]
+    extracted_data = (extracted_data - np.mean(extracted_data, axis=0)) / np.std(extracted_data, axis=0)
+    extracted_data = scaler.fit_transform(extracted_data.reshape(-1, 1)).reshape(-1, time_steps, 1)
+    return extracted_data
+
+def create_separate_scalers():
+    open_scaler = StandardScaler()
+    high_scaler = StandardScaler()
+    low_scaler = StandardScaler()
+    close_scaler = StandardScaler()
+    volume_scaler = StandardScaler()
+    so_scaler = MinMaxScaler()
+    pvo_scaler = StandardScaler()
+    ema_scaler = StandardScaler()
+    rsi_scaler = MinMaxScaler()
+    srsi_scaler = MinMaxScaler()
+    cci_scaler = MinMaxScaler()
+    psar_scaler = StandardScaler()
+    vwap_scaler = StandardScaler()
+    target_scaler = StandardScaler()
+    return open_scaler,high_scaler,low_scaler,close_scaler,volume_scaler,so_scaler,pvo_scaler,ema_scaler,rsi_scaler,srsi_scaler,cci_scaler,psar_scaler,vwap_scaler,target_scaler
+
+def prepare_input_target_data(dataset, feat_num):
+    input_data = []
+    target_data = []
+    for i in range(0, len(dataset) - time_steps + 1, future_points):
+        input_data.append(dataset.iloc[i:i + time_steps, :feat_num].values)
+        target_data.append(dataset.iloc[i + time_steps - 1, dataset.columns.get_loc('Return')])
+    input_data = np.array(input_data)
+    target_data = np.array(target_data)
+    return input_data,target_data
