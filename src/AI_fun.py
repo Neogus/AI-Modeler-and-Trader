@@ -51,11 +51,8 @@ def get_psar(df, iaf=0.02, maxaf=0.2):
     lp = low.iloc[0]
 
     for i in range(2, length):
-        if bull:
-            df.psar.iloc[i] = df.psar.iloc[i - 1] + af * (hp - df.psar.iloc[i - 1])
-        else:
-            df.psar.iloc[i] = df.psar.iloc[i - 1] + af * (lp - df.psar.iloc[i - 1])
-
+        hp_lp = hp if bull == True else lp
+        df.psar.iloc[i] = df.psar.iloc[i - 1] + af * (hp_lp - df.psar.iloc[i - 1])
 
         reverse = False
 
